@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="ru">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,36 +9,66 @@
 	<link href="css/styles.css" rel="stylesheet">
 	<script src="js/vue.js"></script>
 </head>
+
 <body>
 	<div class="wrapper">
 		<div class="sample">
-			<form>
+			<form v-if="!formDone">
 				<div class="form-group">
-					<label>field</label>
-					<input type="text" class="form-control">
-				</div>
-				...
-				<div class="form-group">
-					<label>Guests</label>
-					<input type="button" class="btn btn-primary" value="+">
+					<label>Email</label>
+					<input type="text" class="form-control" v-model.trim="user.email">
 				</div>
 				<div class="form-group">
-					Guest 1 ....
+					<label>Phone</label>
+					<input type="text" class="form-control" v-model.trim="user.phone">
+				</div>
+				<div class="form-group">
+					<label>First Name</label>
+					<input type="text" class="form-control" v-model.trim="user.firstName">
+				</div>
+				<div class="form-group">
+					<label>Last Name</label>
+					<input type="text" class="form-control" v-model.trim="user.lastName">
+				</div>
+
+				<div>
+					<div class="form-group">
+						<label>Guests</label>
+						<button type="button" class="btn btn-primary" @click="addGuest">+</button>
+					</div>
+					<div class="form-group" v-for="guest, i in guests">
+						<label @dblclick="removeGuest(i)">Guest {{ i + 1 }}</label>
+						<input type="text" class="form-control" v-model="guest.name">
+					</div>
 				</div>
 				<hr>
-				<button class="btn btn-success">Send Data</button>
+				<button type="button" class="btn btn-success" :disabled="!formReady" @click="sendForm">Send
+					Data</button>
 			</form>
-			<div>
+			<div v-else>
 				<h2>All done!</h2>
 				<table class="table table-bordered">
 					<tr>
 						<td>Email</td>
-						<td></td>
+						<td>{{ user.email }}</td>
+					</tr>
+					<tr>
+						<td>Phone</td>
+						<td>{{ user.phone }}</td>
+					</tr>
+					<tr>
+						<td>Full Name</td>
+						<td>{{ fullName }}</td>
 					</tr>
 					<tr>
 						<td>Guests</td>
 						<td>
-							
+							<ul class="list-group">
+								<li class="list-group-item" v-for="guest, i in guests">
+									{{ guest.name }}
+								</li>
+							</ul>
+
 						</td>
 					</tr>
 				</table>
@@ -47,9 +78,39 @@
 	<script>
 		Vue.createApp({
 			data: () => ({
-				
-			})
+				user: {
+					email: '',
+					phone: '',
+					firstName: '',
+					lastName: ''
+				},
+				formDone: false,
+				guests: []
+			}),
+			computed: {
+				fullName() {
+					return `${this.user.firstName} ${this.user.lastName}`.trim();
+				},
+				formReady() {
+					return Object.values(this.user).every(val => val !== '');
+				}
+			},
+			methods: {
+				sendForm() {
+					if (this.formReady) {
+						this.guests = this.guests.filter(guest => guest.name !== '');
+						this.formDone = true;
+					}
+				},
+				addGuest() {
+					this.guests.push({ name: '' });
+				},
+				removeGuest(i) {
+					this.guests.splice(i, 1);
+				}
+			}
 		}).mount('.sample');
 	</script>
 </body>
+
 </html>
