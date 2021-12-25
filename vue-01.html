@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Урок 1</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link href="css/styles.css" rel="stylesheet">
+	<script src="js/vue.js"></script>
+</head>
+<body>
+    <h1>Пример 1</h1>
+	<div class="wrapper">
+		<div class="sample ex1">
+			<input type="text" v-model="name">
+			<hr>
+			<h2>Hello, {{ name }}</h2>
+		</div>
+		
+	</div>
+    <hr>
+    <h1>Пример 2</h1>
+	<div class="wrapper">
+		<div class="sample ex2">
+			<input type="text" :value="name" @input="name = $event.target.value">
+			<hr>
+			<h2>Hello, {{ name }}</h2>
+		</div>
+		
+	</div>
+    <hr>
+    <h1>Пример 3</h1>
+	<div class="wrapper">
+		<div class="sample ex3">
+			<input type="text" :value="name" @input="onInput">
+			<hr>
+			<h2>Hello, {{ name }}</h2>
+		</div>
+		
+	</div>
+    <hr>
+    <h1>Пример 4</h1>
+	<div class="wrapper">
+		<div class="sample ex4">
+			<!-- FN: <input type="text" v-model.trim="firstName">
+            <br>
+			LN: <input type="text" v-model.trim="lastName">
+			<hr>
+			<h2>Hello, {{ firstName + ' ' +  lastName}}</h2> -->
+
+            FN: <input type="text" v-model.trim="firstName">
+            <br>
+			LN: <input type="text" v-model.trim="lastName">
+			<hr>
+			<h2>Hello, {{ fullName() }}</h2> 
+            <br>
+            <button type="button" class="btn btn-primary" @click="showAlert = !showAlert">Toggle</button>
+            <div class="alert alert-danger" v-show="showAlert">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolore amet doloribus tempore quia nemo eaque veniam dolor tenetur a consectetur! Deleniti debitis mollitia non ipsa. Vero atque possimus ratione perspiciatis.</div>
+		</div>
+		
+	</div>
+    <hr>
+    <h1>Пример 5</h1>
+	<div class="wrapper">
+		<div class="sample ex5">
+
+            FN: <input type="text" v-model.trim="firstName">
+            <br>
+			LN: <input type="text" v-model.trim="lastName">
+			<hr>
+			<h2>Hello, {{ fullName }}</h2> 
+            <br>
+            <button type="button" class="btn btn-primary" @click="showAlert = !showAlert">Toggle</button>
+            <div class="alert alert-danger" v-show="showAlert">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolore amet doloribus tempore quia nemo eaque veniam dolor tenetur a consectetur! Deleniti debitis mollitia non ipsa. Vero atque possimus ratione perspiciatis.</div>
+		</div>
+		
+	</div>
+    <hr>
+    <h1>Пример 6</h1>
+	<div class="wrapper">
+		<div class="sample ex6">
+            <input type="text" v-model.trim="promo">
+            <div v-if="haseSale">
+                <div>Base: {{ price }} - {{ sale }}%</div>
+                <div>Final: {{ total }}</div>
+            </div>
+            <div v-else>Final: {{ total }}</div>
+            
+        </div>
+		
+	</div>
+    <hr>
+
+    <h1>Пример 7</h1>
+	<div class="wrapper">
+		<div class="sample ex7">
+            <input type="text" v-model.trim="promo">
+            <div v-if="haseSale">
+                <div>Base: {{ price }} - {{ sale }}%</div>
+                <div>Final: {{ total }}</div>
+            </div>
+            <div v-else>Final: {{ total }}</div>
+            
+        </div>
+		
+	</div>
+    <hr>
+
+    <h1>Пример 8</h1>
+	<div class="wrapper">
+		<div class="sample ex8">
+            <input type="text" v-model.trim.lazy="promo">
+            <div v-if="haseSale">
+                <div>Base: {{ price }} - {{ sale }}%</div>
+                <div>Final: {{ total }}</div>
+            </div>
+            <div v-else>Final: {{ total }}</div>
+            
+        </div>
+		
+	</div>
+    <hr>
+
+    <h1>Пример 9</h1>
+	<div class="wrapper">
+		<div class="sample ex9">
+            <input type="text" :value="promo" @change="onPromo">
+            <div v-if="haseSale">
+                <div>Base: {{ price }} - {{ sale }}%</div>
+                <div>Final: {{ total }}</div>
+            </div>
+            <div v-else>Final: {{ total }}</div>
+            
+        </div>
+		
+	</div>
+    <hr>
+
+    <h1>Пример 10</h1>
+	<div class="wrapper">
+		<div class="sample ex10">
+            <input type="text"  v-model.trim.lazy="promo">
+            <div class="btn btn-danger" @click="promo = '' ">X</div>
+            <button class="btn btn-primary" @click="promo = 'some'">10% for new customers</button>
+            <div v-if="haseSale">
+                <div>Base: {{ price }} - {{ sale }}%</div>
+                <div>Final: {{ total }}</div>
+            </div>
+            <div v-else>Final: {{ total }}</div>
+            
+        </div>
+		
+	</div>
+    <hr>
+
+    <h1>Пример 11</h1>
+	<div class="wrapper">
+		<div class="sample ex11">
+            <button @click="addNumber">Add</button>
+            <br>
+            <ul class="list-group">
+                <li 
+                    class="list-group-item" 
+                    v-for="number, i in numbers"
+                    @click="onDouble(i)"
+                    >
+                   {{i}} | {{ number }}
+                </li>
+            </ul>
+            
+        </div>
+		
+	</div>
+    <hr>
+    <h1>Пример 12</h1>
+	<div class="wrapper">
+		<div class="sample ex12">
+            <button @click="addNumber">Add</button>
+            <br>
+            <ul class="list-group">
+                <li 
+                    class="list-group-item" 
+                    v-for="number, i in numbers"
+                    @click="onDouble(i)"
+                    >
+                   {{i}} | {{ number.value }}
+                </li>
+            </ul>
+            
+        </div>
+		
+	</div>
+    <hr>
+
+
+	<script>
+        /*
+        Директивы: 
+            v-model->
+                м-bind -> 
+                    v-bind:value -> :value
+                v-on ->
+                    v-on:input -> @input
+               
+                    v-on:input.trim -> @input
+
+                node.value = app.firstName
+                node.addEventListener('input', function($event){
+                    // firstName = $event.target.value
+                })
+            
+            v-show ->  скрывает блок не вырезая его из DOM
+            v-if 
+            v-else  вырезает из дом показывая то или иное условие 
+
+            v-for
+            v-for="value in array"
+            v-for="value, key in array"
+            v-for="value in obj"
+            v-for="value, key in obj"
+            v-for="value, key, i in obj" { a: 100, b: 200 }
+
+
+
+        data -> задает дата атрибуты по которым должна проходить та или иная логика
+        methods -> методы или функции, которые выполняют ту или иную логику реагируют на каждый перерендер компонента см. пример 3
+        computed -> вычисляемые свойства работаем с теми свойствами которые приходят в "обработку" не мутируем данные" А работаем на их основе 
+        computed не могут работать в асинхронном режиме
+        watch работает в асинхронном режиме если данные приходят с сервера 
+
+        */
+
+		//Пример 1
+		let ex1 = Vue.createApp({
+            // учитывать контекст 
+			data: () => ({
+				name: 'name1'
+			})
+		});
+        ex1.mount('.ex1');
+
+		//Пример 2
+		let ex2 = Vue.createApp({
+			data: () => ({
+				name: 'name2'
+			})
+		});
+		ex2.mount('.ex2');
+
+		//Пример 3
+		let ex3 = Vue.createApp({
+			data: () => ({
+				name: 'name3'
+			}),
+            methods: {
+                onInput(e){
+                    this.name = e.target.value; 
+                }
+            }
+		});
+		ex3.mount('.ex3');
+
+		//Пример 4
+		let ex4 = Vue.createApp({
+			data: () => ({
+				firstName: '',
+                lastName: '',
+                showAlert: false
+			}),
+            methods: {
+                fullName(){
+                    console.log(1); 
+                    return `${this.firstName} ${this.lastName}`;
+                }
+            }
+		});
+		ex4.mount('.ex4');
+
+		//Пример 5
+		let ex5 = Vue.createApp({
+			data: () => ({
+				firstName: '',
+                lastName: '',
+                showAlert: false
+			}),
+            computed: {
+                fullName(){
+                    console.log(2); 
+                    return `${this.firstName} ${this.lastName}`;
+                }
+            }
+		});
+		ex5.mount('.ex5');
+        /*
+			{
+				firstName: '',
+				lastName: '',
+				showAlert: '',
+				_computed: {
+					fullName: fullName()
+				}
+			}
+
+			_get(target, name)
+			name == fullName
+				-> cacheTN
+
+			_set(target, name, value){
+				(name == firstName
+				name == lastName)
+				cacheTN = fullName()
+			}
+		*/
+
+
+        //Пример 6
+
+        function getSaleEx6(promo){
+            let codes = {
+                some: 10,
+                other: 20
+            };
+
+            return codes.hasOwnProperty(promo) ? codes[promo] : 0;
+        }
+
+		let ex6 = Vue.createApp({
+			data: () => ({
+				promo: '',
+                price: 1000
+			}),
+            computed: {
+                sale(){
+                    return getSaleEx6(this.promo);
+                },
+                haseSale(){
+                    return this.sale > 0;
+                },
+                total(){
+                    return this.price * (1 - this.sale / 100);
+                }
+            }
+		});
+		ex6.mount('.ex6');
+        
+
+        //Пример 7
+
+        function getSaleEx7(promo, onComplete){
+            let codes = {
+                some: 10,
+                other: 20
+            };
+            setTimeout(function(){
+                onComplete(codes.hasOwnProperty(promo) ? codes[promo] : 0);
+            }, 500);
+        }
+
+        let ex7 = Vue.createApp({
+			data: () => ({
+				promo: '',
+                price: 1000
+			}),
+            //computed не могут работать в асинхронном режиме
+            computed: {
+                sale(){
+                    getSaleEx7(this.promo, function(sale){
+                        this.sale = sale;
+                    });
+                    
+
+					return // ????
+                },
+                haseSale(){
+                    return this.sale > 0;
+                },
+                total(){
+                    return this.price * (1 - this.sale / 100);
+                }
+            }
+		});
+		ex7.mount('.ex7');
+
+
+        //Пример 8
+
+        function getSaleEx8(promo, onComplete){
+            let codes = {
+                some: 10,
+                other: 20
+            };
+            setTimeout(function(){
+                onComplete(codes.hasOwnProperty(promo) ? codes[promo] : 0);
+            }, 500);
+        }
+
+        let ex8 = Vue.createApp({
+			data: () => ({
+				promo: '',
+                sale: 0,
+                price: 1000
+			}),
+            //computed не могут работать в асинхронном режиме
+            computed: {
+                 
+                haseSale(){
+                    return this.sale > 0;
+                },
+                total(){
+                    return this.price * (1 - this.sale / 100);
+                }
+            },
+            watch: {
+                promo(){
+                    getSaleEx8(this.promo, (sale)=>{
+                        this.sale = sale;
+                        console.log(sale);
+                    });
+                }
+            }
+		});
+		ex8.mount('.ex8');
+
+
+        //Пример 9
+
+        function getSaleEx9(promo, onComplete){
+            let codes = {
+                some: 10,
+                other: 20
+            };
+            setTimeout(function(){
+                onComplete(codes.hasOwnProperty(promo) ? codes[promo] : 0);
+            }, 500);
+        }
+
+
+        let ex9 = Vue.createApp({
+			data: () => ({
+				promo: '',
+                sale: 0,
+                price: 1000
+			}),
+            computed: {
+                 
+                haseSale(){
+                    return this.sale > 0;
+                },
+                total(){
+                    return this.price * (1 - this.sale / 100);
+                }
+            },
+            methods: {
+                onPromo(e){
+                    this.promo = e.target.value.trim();
+                    getSaleEx9(this.promo, (sale)=>{
+                        this.sale = sale;
+                    });
+                },
+                
+            }
+		});
+		ex9.mount('.ex9');
+
+
+        //Пример 10
+        // смотрю изменения в данных promo
+
+        function getSaleEx10(promo, onComplete){
+            let codes = {
+                some: 10,
+                other: 20
+            };
+            setTimeout(function(){
+                onComplete(codes.hasOwnProperty(promo) ? codes[promo] : 0);
+            }, 500);
+        }
+
+
+        let ex10 = Vue.createApp({
+			data: () => ({
+				promo: '',
+                sale: 0,
+                price: 1000
+			}),
+            computed: {
+                 
+                haseSale(){
+                    return this.sale > 0;
+                },
+                total(){
+                    return this.price * (1 - this.sale / 100);
+                }
+            },
+            watch: {
+                promo(){
+                    getSaleEx10(this.promo, (sale)=>{
+                        this.sale = sale;
+                        console.log(sale);
+                    });
+                }
+            }
+		});
+		ex10.mount('.ex10');
+
+
+        // Пример 11
+        let ex11 = Vue.createApp({
+			data: () => ({
+				numbers: [],
+			}),
+            methods: {
+                addNumber(){
+                    this.numbers.push(Math.random());
+                },
+                onDouble(i){
+                    console.log(i);
+                    this.numbers[i] *= 2;
+                }
+
+            }
+        });
+		ex11.mount('.ex11');
+
+
+        // Пример 12
+        let ex12 = Vue.createApp({
+			data: () => ({
+				numbers: [],
+			}),
+            methods: {
+                addNumber(){
+                    this.numbers.push({ value: Math.random() });
+                },
+                onDouble(i){
+                    console.log(i);
+					this.numbers[i].value *= 2;
+                }
+
+            }
+        });
+		ex12.mount('.ex12');
+
+
+	</script>
+</body>
+</html>
