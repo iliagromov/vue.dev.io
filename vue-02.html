@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Урок 1</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link href="css/styles.css" rel="stylesheet">
+	<script src="js/vue.js"></script>
+    <style>
+		.my-success{
+			font-style: italic;
+		}
+
+		.other-warning{
+			font-weight: bold;
+		}
+
+		.table-some{
+			color: #fff;
+			background: #000;
+		}
+        .transition-mh{
+			transition: min-height 0.5s;
+		}
+	</style>
+</head>
+<body>
+    <h1>Пример 1</h1>
+	<div class="wrapper">
+		<div class="sample lifecycle">
+			Loading...
+		</div>
+	</div>
+    <hr>
+
+    <h1>Пример 2</h1>
+    <div class="wrapper refs">
+		<div class="sample">
+			<form v-if="!formDone">
+				<div class="form-group">
+					<label>Email</label>
+					<input type="text" class="form-control" v-model.trim="user.email" ref="firstInp">
+				</div>
+				<div class="form-group">
+					<label>Phone</label>
+					<input type="text" class="form-control" v-model.trim="user.phone">
+				</div>
+				<div class="form-group">
+					<label>FirstName</label>
+					<input type="text" class="form-control" v-model.trim="user.firstName">
+				</div>
+				<div class="form-group">
+					<label>LastName</label>
+					<input type="text" class="form-control" v-model.trim="user.lastName">
+				</div>
+				<div>
+					<div class="form-group">
+						<label>Guests</label>
+						<button type="button" class="btn btn-primary" @click="addGuest">+</button>
+					</div>
+					<div class="form-group" v-for="(guest, i) in guests">
+						<label @dblclick="removeGuest(i)">Guest {{ i + 1 }}</label>
+						<input type="text" class="form-control" v-model.trim="guest.name" ref="lastGuest">
+					</div>
+				</div>
+				{{ guests }}
+				<hr>
+				<button class="btn btn-success" type="button" :disabled="!formReady" @click="sendForm">Send Data</button>
+			</form>
+			<div v-else>
+				<h2>All done!</h2>
+				<table class="table table-bordered">
+					<tr>
+						<td>Email</td>
+						<td>{{ user.email }}</td>
+					</tr>
+					<tr>
+						<td>Phone</td>
+						<td>{{ user.phone }}</td>
+					</tr>
+					<tr>
+						<td>Full Name</td>
+						<td>{{ fullName }}</td>
+					</tr>
+					<tr>
+						<td>Guests</td>
+						<td>
+							<ul class="list-group">
+								<li class="list-group-item" v-for="guest in guests">
+									{{ guest.name }}
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+    <h1>Пример 3</h1>
+    
+    <div class="wrapper">
+		<div class="sample classesAndForm">
+			<div class="alert" :class="alertClasses">
+				Some text
+			</div>
+			<div class="form-check">
+				<div>
+					<label class="form-check-label">
+						<input class="form-check-input" type="radio" value="green" v-model="alertType"> 
+						Green
+					</label>
+				</div>
+				<div>
+					<label class="form-check-label">
+						<input class="form-check-input" type="radio" value="orange" v-model="alertType"> 
+						Orange
+					</label>
+				</div>
+				<div>
+					<label class="form-check-label">
+						<input class="form-check-input" type="radio" value="red" v-model="alertType"> 
+						Red
+					</label>
+				</div>
+			</div>
+			<hr>
+			<div class="form-check">
+				<div v-for="(value, name) in tableClasess">
+					<label class="form-check-label">
+						<input class="form-check-input" type="checkbox" v-model="tableClasess[name]"> 
+						{{ name }}
+					</label>
+				</div>
+			</div>
+			<hr>
+			<table class="table" :class="tableClasess">
+				<tr>
+					<td>Title</td>
+					<td>Some</td>
+					<td>nz</td>
+				</tr>
+				<tr>
+					<td>Title</td>
+					<td>Some</td>
+					<td>nz</td>
+				</tr>
+				<tr>
+					<td>Title</td>
+					<td>Some</td>
+					<td>nz</td>
+				</tr>
+			</table> 
+			{{ alertType }}
+			{{ tableClasess }}
+		</div>
+	</div>
+    <hr>
+
+    <h1>Пример 4</h1>
+    <div class="wrapper">
+        <div class="sample sampleStyles">
+            {{ alertHeight }}
+			<button class="btn btn-danger" @click="alertHeight += 50">++</button>
+			<hr>
+			<div class="alert alert-success transition-mh" :style="alertStyles">
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum architecto voluptatibus delectus odit eveniet magni, laboriosam, eos excepturi adipisci nemo at sint ea quod, sapiente deserunt dolore assumenda vel! Perspiciatis.
+			</div>
+			<table class="table" :style="tableStyles">
+				<tr>
+					<td>Title</td>
+					<td>Some</td>
+					<td>nz</td>
+				</tr>
+				<tr>
+					<td>Title</td>
+					<td>Some</td>
+					<td>nz</td>
+				</tr>
+				<tr>
+					<td>Title</td>
+					<td>Some</td>
+					<td>nz</td>
+				</tr>
+			</table> 
+        </div>
+    </div>
+    <hr>
+	<script>
+
+        // Пример 1 lifecycle
+		const appLifecycle = Vue.createApp({
+			data: () => ({
+				email: 'test email'
+			}),
+			template: `
+				<div class="form-group">
+					<label>Email</label>
+					<input type="text" class="form-control" v-model="email"><hr>
+					{{ email }}
+				</div>
+			`,
+			beforeCreate(){
+				console.log('beforeCreate');
+				console.log(this.email);
+			},
+			created(){
+				console.log('created');
+				console.log(this.email);
+				console.log(this.$el);
+			},
+			beforeMount(){
+				console.log('beforeMounted');
+				console.log(this.$el);
+			},
+			mounted(){
+				console.log('mounted');
+				console.log(this.$el);
+				console.log(this.$el.innerHTML);
+			},
+			beforeUpdate(){
+				console.log('beforeUpdate');
+			},
+			updated(){
+				console.log('updated');
+			}
+		});
+
+		appLifecycle.mount('.lifecycle');
+
+        //Пример 2
+
+        const appRefs = Vue.createApp({
+			data: () => ({
+				user: {
+					email: '',
+					phone: '',
+					firstName: '',
+					lastName: ''
+				},
+				formDone: false,
+				guests: []
+			}),
+			computed: {
+				fullName(){
+					return `${this.user.firstName} ${this.user.lastName}`.trim();
+				},
+				formReady(){
+					return Object.values(this.user).every(val => val !== '');
+				}
+			},
+			methods: {
+				sendForm(){
+					if(this.formReady){
+						this.guests = this.guests.filter(guest => guest.name !== '');
+						this.formDone = true;
+					}
+				},
+				addGuest(){
+					this.guests.push({ name: '' });
+
+					this.$nextTick(() => {
+						this.$refs.lastGuest.focus();
+					});
+				},
+				removeGuest(i){
+					this.guests.splice(i, 1);
+				}
+			},
+            // lifecycle mounted focus
+			mounted(){
+				this.$refs.firstInp.focus();
+			}
+		});
+		
+		console.log(appRefs.mount('.refs'));
+
+        //Пример 3 
+        /*
+			class="string"
+			:class="string"
+			:class="[classes]"
+			:class="{a: boolean, b: boolean}"
+			:class=[string, obj, string]
+		*/
+
+        const appClassesAndForm = Vue.createApp({
+            data: () => ({
+				alertType: 'green',
+				tableClasess: {
+					'table-hover': false,
+					'table-bordered': false,
+					'table-some': false
+				}
+			}),
+            computed: {
+				alertClasses(){
+					return {
+						'alert-success': this.alertType === 'green',
+						'alert-warning': this.alertType === 'orange',
+						'alert-danger': this.alertType === 'red'
+					}
+				}
+			}
+        })
+        appClassesAndForm.mount('.classesAndForm');
+
+        //Пример 4 
+        const appStyles = Vue.createApp({
+            data: () => ({
+                alertHeight: 100,
+                tabelStyles: {
+                    color: '#f90',
+                    backgroundColor: '#000',
+                    fontSize: '20px'
+                }
+                
+            }),
+            computed:{
+                alertStyles(){
+                    return {
+                        'min-height': this.alertHeight + 'px'
+                    }
+                }
+            }
+        })
+        appStyles.mount('.sampleStyles');
+	</script>
+</body>
+</html>
