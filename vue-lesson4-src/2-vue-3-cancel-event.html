@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	 <meta charset="UTF-8">
+	 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	 <title>1</title>
+	 <link rel="stylesheet" href="css/bootstrap.min.css">
+	 <link rel="stylesheet" href="css/font-awesome.min.css">
+	 <link href="css/styles.css" rel="stylesheet">
+	 <script src="js/vue.js"></script>
+</head>
+<body>
+<div class="wrapper">
+<div class="sample">
+	<form>
+		<div class="progress">
+			<div class="progress-bar" :style="progressStyles"></div>
+		</div>
+		<div>
+			<app-field 
+				v-for="(field, i) in info"
+				:key="i"
+				:value="field.value"	
+				:name="field.name"	
+				:valid="field.valid"
+				@input="onInput(i, $event)"
+			></app-field>
+		</div>
+		<button class="btn btn-primary">
+			Send Data
+		</button>
+	</form>
+	<pre>{{ info }}</pre>
+	<div>
+		<table class="table table-bordered">
+			<tr>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+</div>
+</div>
+	<script>
+		let appField = {
+			props: ['name', 'value', 'valid'],
+			emits: { input: null },
+			data(){
+				return {
+					activated: this.value !== ''
+				}
+			},
+			computed: {
+				iconClasses(){
+					return {
+						'fa-check-circle text-success': this.valid,
+						'fa-exclamation-circle text-danger': !this.valid
+					}
+				}
+			},
+			methods: {
+				onInput(e){
+					this.activated = true;
+					this.$emit('input', e.target.value);
+				}
+			},
+			template: `<div class="form-group">
+				<label>{{ name }}</label>
+				<span v-if="activated"
+						class="fa" 
+						:class="iconClasses"></span>
+				<input type="text" 
+					class="form-control" 
+					:value="value"
+					@input="onInput"
+				>
+			</div>`
+		};
+
+		let app = Vue.createApp({
+			data: () => ({
+				info: [
+					{
+						name: 'Name',
+						value: '',
+						pattern: /^[a-zA-Z ]{2,30}$/
+					},
+					{
+						name: 'Phone',
+						value: '',
+						pattern: /^[0-9]{7,14}$/
+					},
+					{
+						name: 'Email',
+						value: '',
+						pattern: /.+/
+					},
+					{
+						name: 'Some Field 1',
+						value: '',
+						pattern: /.+/
+					},
+					{
+						name: 'Some Field 2',
+						value: '',
+						pattern: /.+/
+					}
+				]
+			}),
+			computed: {
+				fieldsDone(){
+ 					return this.info.reduce((total, field) => {
+						return total + (field.valid ? 1 : 0);
+					}, 0);
+					//return this.info.reduce((t, f) => t + (f.valid ? 1 : 0), 0);
+				},
+				formReady(){
+					return this.fieldsDone === this.info.length;
+				},
+				progressStyles(){
+					return {
+						width: (this.fieldsDone / this.info.length * 100) + '%'
+					}
+				}
+			},
+			methods: {
+				onInput(i, value){
+					console.log(i, value);
+					let field = this.info[i];
+					field.value = value.trim();
+					field.valid = field.pattern.test(field.value);
+				}
+			},
+			created(){
+				return this.info.forEach(field => {
+					field.valid = field.pattern.test(field.value); 
+				});
+			}
+		});
+		
+		app.component('AppField', appField);
+		app.mount('.sample');
+	</script>
+</body>
+</html>

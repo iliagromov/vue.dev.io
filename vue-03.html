@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Урок 3</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link href="css/styles.css" rel="stylesheet">
+	<script src="js/vue.js"></script>
+</head>
+<body>
+    <h1>Пример 1 без компонента</h1>
+    <div class="wrapper">
+        <div class="sample ex1">
+            <div class="Todo">
+                <h1>Your actions</h1>
+                <div class="action" v-for="(action, i) in todoList">
+                    <div class="alert" :class="getActionClass(action)">
+                        <h2>{{ action.title }}</h2>
+                        <div class="progress">
+                            <div :style="{width: (action.current / action.max * 100) + '%'}"
+                                    class="progress-bar"
+                            >
+                            </div>
+                        </div>
+                        <hr>
+                        <h3 v-if="action.current === action.max">All done!</h3>
+                        <button v-else type="button" class="btn btn-primary" @click="makeStep(i)">
+                            I make step!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <h1>Пример 2 компонентный подход</h1>
+    <div class="wrapper">
+        <div class="sample ex2">
+            <div class="Todo">
+                <h1>Your actions</h1>
+                <app-action 
+                    v-for="(action, i) in todoList"
+                    :title="action.title"
+                    :current="action.current"
+                    :max="action.max"
+                    @step="onNext(i)"
+                    >
+                </app-action>
+                
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <script>
+        let ex1 = Vue.createApp({
+			data: () => ({
+				todoList: [
+                    { title: 'First action', current: 1, max: 5 },
+                    { title: 'Other work', current: 2, max: 10 },
+                    { title: 'Some fun', current: 4, max: 7 }
+                ]
+			}),
+            methods: {
+                makeStep(i){
+                    let step = this.todoList[i];
+
+                    if(step.current < step.max){
+                        step.current++;
+                    }
+                },
+                getActionClass(action){
+                    let rel = action.current / action.max;
+
+                    return {
+                        'alert-danger': rel < 0.25,
+                        'alert-warning': rel >= 0.25 && rel < 0.75,
+                        'alert-success': rel >= 0.75
+                    }
+                }
+            }
+		});
+        ex1.mount('.ex1');
+
+
+        let AppAction = {
+            props: ['title', 'current', 'max'],
+            // emits: {
+            //     step: null
+            // },
+            template: `<div class="action" >
+                    <div class="alert" :class="alertClass">
+                        <h2>{{ title }}</h2>
+                        <div class="progress">
+                            <div :style="progressStyles"
+                                    class="progress-bar">
+                            </div>
+                        </div>
+                        <hr>
+                        <h3 v-if="false">All done!</h3>
+                        <button v-else type="button" class="btn btn-primary" @click="onNextClick">
+                            I make step!
+                        </button>
+                    </div>
+                </div>`,
+            computed: {
+                rel(){
+                    return this.current / this.max;
+                },
+                alertClass(){
+                    return {
+                        'alert-danger': this.rel < 0.25,
+                        'alert-warning': this.rel >= 0.25 && this.rel < 0.75,
+                        'alert-success': this.rel >= 0.75
+                    }
+                },
+                progressStyles(){
+                    return {width: (this.rel * 100) + '%'};
+                }
+            },
+            methods: {
+                onNextClick(){
+                    if(this.current < this.max){
+                        this.$emit('step');
+                    }
+                }
+            }
+        }
+
+        let ex2 = Vue.createApp({
+            data: () => ({
+				todoList: [
+                    { title: 'First action', current: 1, max: 5 },
+                    { title: 'Other work', current: 2, max: 10 },
+                    { title: 'Some fun', current: 4, max: 7 }
+                ]
+			}),
+            methods: {
+                onNext(i){
+                    this.todoList[i].current++
+                }
+            }
+        });
+        ex2.component('app-action',AppAction)
+        ex2.mount('.ex2');
+    </script>
+</body>
+</html>
