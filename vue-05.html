@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	 <meta charset="UTF-8">
+	 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	 <title>Урок 5 слоты</title>
+	 <link rel="stylesheet" href="css/bootstrap.min.css">
+	 <link href="css/styles.css" rel="stylesheet">
+	 <script src="js/vue.js"></script>
+     <style>
+		.fade-enter-active{
+			animation: fadeIn 0.5s;
+		}
+
+		.fade-leave-active{
+			animation: fadeOut 0.5s;
+		}
+
+		@keyframes fadeIn{
+			from{ opacity: 0 }
+			to{ opacity: 1 }
+		}
+
+		@keyframes fadeOut{
+			from{ opacity: 1 }
+			to{ opacity: 0 }
+		}
+	 </style> 
+</head>
+<body>
+    <div class="wrapper">
+        <h1>Transitions</h1>
+        <div class="sample ex2">
+            <button class="btn btn-primary" @click="showAlert = !showAlert">
+                Toggle
+            </button>
+            <hr>
+            <transition name="fade">
+                <div class="alert alert-success" v-show="showAlert">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur molestiae, sunt facere iure in, consectetur reiciendis assumenda magni molestias sed vel a dolores nihil, expedita unde tempora iste error nemo. Iusto in nisi vero, omnis, asperiores blanditiis commodi alias, id accusantium laborum et, quibusdam harum eveniet voluptas doloribus expedita eos.</p>
+                </div>
+            </transition>
+            
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="wrapper">
+        <h1>Transitions 2</h1>
+        <div class="sample ex3">
+            <button class="btn btn-primary" @click="showAlert = !showAlert">
+                Toggle
+            </button>
+            <hr>
+            <transition name="fade" mode="out-in" >
+                <div class="alert alert-success" v-if="showAlert">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur molestiae, sunt facere iure in, consectetur reiciendis assumenda magni molestias sed vel a dolores nihil, expedita unde tempora iste error nemo. Iusto in nisi vero, omnis, asperiores blanditiis commodi alias, id accusantium laborum et, quibusdam harum eveniet voluptas doloribus expedita eos.</p>
+                </div>
+                <h2 class="alert alert-danger" v-else>Hi there!</h2>
+            
+            </transition>
+            
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="wrapper">
+        <h1>Transitions 3</h1>
+        <div class="sample ex4">
+            <!-- vue 2 keys requires -->
+            <transition name="fade" mode="out-in" >
+                <div class="alert alert-success" v-if="showAlert">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur molestiae, sunt facere iure in, consectetur reiciendis assumenda magni molestias sed vel a dolores nihil, expedita unde tempora iste error nemo. Iusto in nisi vero, omnis, asperiores blanditiis commodi alias, id accusantium laborum et, quibusdam harum eveniet voluptas doloribus expedita eos.</p>
+                </div>
+                <h2 class="alert alert-danger" v-else>Hi there!</h2>
+            
+            </transition>
+        </div>
+    </div>
+    
+
+    <div class="wrapper">
+        <h1>Slots</h1>
+        <div class="sample ex1">
+            <div v-if="false">
+
+            
+            <app-modal title="Hi modal" :show="true">
+                <div class="alert alert-danger">
+                    Check errors! Already: {{ i }}
+                </div>
+                <hr>
+                <p>And rerun app.</p>
+		        <p @click="i++">Close now.</p>
+            </app-modal>
+            <app-modal :show="false">
+                <p>And rerun app.</p>
+                <template v-slot:header>
+                    <h2>Hi there!</h2>
+                </template>
+            </app-modal>
+        </div>
+        </div>
+    </div>
+   
+    <script>
+        const appModal = {
+            props: ['title', 'show'],
+            template: `<div class="modal" :class="rootClasses">
+				<div class="modal-dialog">
+  					<div class="modal-content">
+						<div class="modal-header">
+							<slot name="header">
+								<h5 class="modal-title">{{ title }}</h5>
+							</slot>
+						</div>
+						<div class="modal-body">
+							<slot></slot>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary">X</button>
+						</div>
+					</div>
+				</div>
+			</div>`,
+            computed: {
+                rootClasses(){
+                    return {
+                        'd-block': this.show
+                    }
+                }
+            },
+            mounted(){
+                console.log(this.$slots.default());
+				/* 
+					// v2
+					if(this.$slots.hasOwnProperty('default')){
+					this.$slots.default.forEach(vnode => {
+						console.log(vnode);
+					})
+				} */
+            }
+        }
+        const app = Vue.createApp({
+            data: () => ({
+                i: 1
+            }),
+        });
+        app.component('appModal', appModal);
+        app.mount('.ex1');
+
+        const appEx2 = Vue.createApp({
+            data: () => ({
+                showAlert: true
+            })
+        });
+        appEx2.mount('.ex2');
+
+        const appEx3 = Vue.createApp({
+            data: () => ({
+                showAlert: true
+            })
+        });
+        appEx3.mount('.ex3');
+
+        const appEx4 = Vue.createApp({
+            data: () => ({
+                showAlert: true
+            })
+        });
+        appEx4.mount('.ex4');
+    </script>
+</body>
+</html>

@@ -1,6 +1,11 @@
 <template>
-  <app-header ></app-header>
-  <app-content></app-content>
+  <app-header :price="price" :cnt="cnt"></app-header>
+  <app-content
+    :price="price"
+
+    @increase="cnt++"
+    @decrease="onDescrease"
+  ></app-content>
 </template>
 <script>
 import AppHeader from "./components/Header/Header.vue";

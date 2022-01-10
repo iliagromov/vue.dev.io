@@ -2,9 +2,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import store from './store';
 
-const app = createApp(App);
+let app = createApp(App);
 app.use(store);
-app.mount('#app');
-
+app.mount('#app')
 
 import 'bootstrap/dist/css/bootstrap.css'
