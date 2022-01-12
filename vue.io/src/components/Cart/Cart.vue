@@ -1,11 +1,27 @@
 <template>
   <div>
-    <div>In cart: {{ 1 }}</div>
-    <div>Total: {{ 1 }}</div>
+    <!-- <div>In cart: {{ $store.state.cnt }} </div>
+    <div>Total: {{ $store.getters.total }} </div>
+     -->
+    <div>In cart: {{ cnt }} </div>
+    <div>Total: {{ total }} </div>
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
+
+
 export default {
-  
+  computed: mapGetters(['cnt', 'total'])
+  /*
+    {
+      cnt(){
+        return this.$store.getters.cnt
+      },
+      total(){
+        return this.$store.getters.total
+      },
+    }
+  */
 };
 </script>

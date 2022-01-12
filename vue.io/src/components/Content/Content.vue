@@ -7,15 +7,42 @@
           ></app-product>
         </div>
       </div>
+      <hr>
+      <button type="button" @click="sendOrder">Send </button>
+      <hr>
+      <div class="alert" :class="alertClasses" v-if="showAlert">
+        {{ alertText }}
+      </div>
     </div>
   </section>
 </template>
 <script>
-import AppProduct from "..//Product/Product.vue";
+import AppProduct from "../Product/Product.vue";
+import { mapGetters, mapActions } from 'vuex';
+ 
 
 export default {
   components: {
     AppProduct,
   },
+  computed: {
+    ...mapGetters(['status']),
+    showAlert(){
+      return this.status !== 'none'
+    },
+    alertText(){
+      return this.status === 'pending' ? 'loading ... ' : 'Your order is done';
+    },
+    alertClasses(){
+      return {
+        'alert-warning' : this.status === 'pending',
+        'alert-success' : this.status === 'done',
+      }
+    },
+
+  },
+  methods: {
+    ...mapActions(['sendOrder'])
+  }
 };
 </script>
