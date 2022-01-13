@@ -14,14 +14,18 @@
     </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
  
 export default {
    computed: mapGetters(['price', 'cnt']),
    methods: {
-       ...mapMutations(['decrease', 'increase', 'setCnt']),
+       ...mapActions(['decrease', 'increase', 'setCnt']),
         onInput(e){
+            let lastCnt = this.cnt;
             this.setCnt(e.target.value);
+            if(lastCnt === this.cnt && lastCnt.toString() !== e.target.value){
+              e.target.value = lastCnt;
+            }
         }
    }
     /*
