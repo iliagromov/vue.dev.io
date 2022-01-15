@@ -6,6 +6,10 @@ import router from './router';
 let app = createApp(App);
 app.use(store);
 app.use(router);
-app.mount('#app')
+
+store.dispatch('cart/load');
+store.dispatch('products/load').then( () => {
+    app.mount('#app');
+});
 
 import 'bootstrap/dist/css/bootstrap.css'

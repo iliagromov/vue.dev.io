@@ -35,10 +35,15 @@ const routes = [
         component: ProductsList
     },
     {
-        name: 'product',
+        name: 'product-item',
         path: '/product/:id',
         component: Product
     },
+    {
+        name: 'E404',
+        path: '/:pathMatch(.*)',
+        component: E404,
+    }
 
 ];
 

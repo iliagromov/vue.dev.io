@@ -36,7 +36,9 @@
 					</div>
 				</div>
 			</div>
+			{{ map }}
 		</div>
+		
 	</div>
 </template>
 
@@ -46,7 +48,7 @@
 	export default {
 		computed: {
 			// ...mapGetters({ products: 'products/all'})
-			...mapGetters('products', { products: 'all'}),
+			...mapGetters('products', { products: 'all', map: 'itemsMap'}),
 			...mapGetters('cart', {inCart: 'has'})
 		},
 		methods: {
