@@ -1,53 +1,79 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import Cart from '@/views/Cart';
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+
+import store from '@/store'
+
 import ProductsList from '@/views/ProductsList';
 import Product from '@/views/Product';
-import Checkout from '@/views/checkout/Base';
-import CheckoutStep1 from '@/views/checkout/Step1';
-import CheckoutStep2 from '@/views/checkout/Step2';
-
+import Cart from '@/views/Cart';
+import Checkout from '@/views/Checkout';
 import E404 from '@/views/E404';
+import OfficeBase from '@/views/office/Base';
+import OfficeIndex from '@/views/office/Index';
+import OfficeOrders from '@/views/office/Orders';
 
-const routes = [
-    {
-        name: 'cart',
-        path: '/cart',
-        component: Cart
-    },
-    {
-        name: 'checkout',
-        path: '/order',
-        component: Checkout,
-        children: [
-            {
-                path: '',
-                component: CheckoutStep1
-            },
-            {
-                path: 'step-2',
-                component: CheckoutStep2
-            }
-        ]
-    },
-    {
-        name: 'catalog',
-        path: '/',
-        component: ProductsList
-    },
-    {
-        name: 'product-item',
-        path: '/product/:id',
-        component: Product
-    },
-    {
-        name: 'E404',
-        path: '/:pathMatch(.*)',
-        component: E404,
-    }
-
+let routes = [
+	{
+		name: 'products',
+		path: '/',
+		component: ProductsList
+	},
+	{
+		name: 'products-item',
+		path: '/products/:id',
+		component: Product
+	},
+	{
+		name: 'cart',
+		path: '/cart',
+		component: Cart
+	},
+	{
+		name: 'checkout',
+		path: '/order',
+		component: Checkout
+	},
+	{
+		name: 'login',
+		path: '/login',
+		component: E404
+	},
+	{
+		path: '/office',
+		component: OfficeBase,
+		meta: { auth: true },
+		children: [
+			{
+				name: 'office',
+				path: '',
+				component: OfficeIndex
+			},
+			{
+				name: 'office-orders',
+				path: 'orders',
+				component: OfficeOrders
+			}
+		]
+	},
+	{
+		path: '*',
+		component: E404
+	}
 ];
 
-export default createRouter({
-    routes,
-    history: createWebHistory(process.env.BASE_URL)
+const router = new VueRouter({
+	mode: 'history',
+	routes
 });
+
+router.beforeEach((to, from, next) => {
+	if(to.matched.some(route => route.meta.auth) && !store.getters['user/isLogin']){
+		next({ name: 'login' });
+	}
+	else{
+		next();
+	}
+});
+
+export default router;

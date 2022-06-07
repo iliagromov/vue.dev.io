@@ -1,23 +1,26 @@
 import { makeRequest } from '../api/server';
+import * as productsApi from '@/api/products.js';
 
 export default {
     namespaced: true,
     state: {
         // items: tmpGetPr()
-        items: []
+        // items: []
+        items: null
     },
     getters: {
         all: state => state.items,
-        itemsMap(state) {
-            let map = {};
-            state.items.forEach((product, i) => {
-                map[product.id.toString()] = i;
-            });
+        one: state => id => state.items.find(pr => pr.id == id),
+        // itemsMap(state) {
+        //     let map = {};
+        //     state.items.forEach((product, i) => {
+        //         map[product.id.toString()] = i;
+        //     });
 
-            return map;
-        },
+        //     return map;
+        // },
         // item: state => id => state.items.find(product => product.id === id)
-        item: (state, getters) => id => state.items[getters.itemsMap[id]]
+        // item: (state, getters) => id => state.items[getters.itemsMap[id]]
         // item: (state, getters) => id => getters.itemsMap[product.id]
     },
     mutations: {
@@ -27,14 +30,18 @@ export default {
 
     },
     actions: {
-        async load(store) {
-            //http://vue.io/api.php
-            let items =  await makeRequest('http://faceprog.ru/reactcourseapi/products/all.php');
-            // console.log(items);
-            store.commit('setItems', items);
+        async load({ commit }){
+			let products = await productsApi.all();
+			commit('setItems', products);
+			return products;
+		}
 
-
-        }
+        // async load(store) {
+        //     //http://vue.io/api.php
+        //     let items =  await makeRequest('http://faceprog.ru/reactcourseapi/products/all.php');
+        //     // console.log(items);
+        //     store.commit('setItems', items);
+        // }
     }
 }
 function tmpGetPr() {

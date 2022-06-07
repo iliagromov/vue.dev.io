@@ -1,66 +1,44 @@
-<template >
-	<div>
-		<h1>Products</h1>
-		<div class="row">
-			<div class="col col-sm-4 mb-3 mt-3"
+<template>
+<div>
+	<h1>Products</h1>
+	<div class="row">
+		<div class="col col-sm-4" :class="$style.col"
 				v-for="product in products"
 				:key="product.id"
-			>
-				<div class="card">
-					<div class="card-body">
-						<h3>{{ product.title }}</h3>
-						<div>{{ product.price }} </div>
-						<router-link :to="`/product/${product.id}`">Read more</router-link>
-						<!-- <button 
-							class="btn btn-success"
-							@click="addToCart(product.id)"
-							>Add To Cart
-						</button>
-						<button 
-							class="btn btn-danger"
-							@click="removeFromCart(product.id)"
-							>remove
-						</button> -->
-						<button v-if="inCart(product.id)"
-							class="btn btn-danger"
-							@click="removeFromCart(product.id)"
-							>remove
-						</button>
-						<button v-else
-							class="btn btn-success"
-							@click="addToCart(product.id)"
-							>Add To Cart
-						</button>
-						
-
-					</div>
+		>
+			<div class="card">
+				<div class="card-body">
+					<h3>{{ product.title }}</h3>
+					<div>{{ product.price }}</div>
+					<router-link :to="{name: 'products-item', params: {id: product.id}}">
+						Get more
+					</router-link>
+					<hr>
+					<product-controls :id="product.id"></product-controls>
 				</div>
 			</div>
-			{{ map }}
 		</div>
-		
 	</div>
+</div>
 </template>
 
 <script>
-	import { mapGetters, mapActions } from 'vuex';
+	import { mapGetters } from 'vuex';
+	import ProductControls from '@/components/ProductControls';
 
 	export default {
-		computed: {
-			// ...mapGetters({ products: 'products/all'})
-			...mapGetters('products', { products: 'all', map: 'itemsMap'}),
-			...mapGetters('cart', {inCart: 'has'})
+		components: {
+			ProductControls
 		},
-		methods: {
-			...mapActions('cart', {addToCart: 'add', removeFromCart: 'remove'})
-		
+		computed: {
+			...mapGetters('products', { products: 'all' })
 		}
-		
 	}
 </script>
 
-<style scoped>
-	.row{
-		padding-left: 15px;
+<style module>
+	.col{
+		margin-top: 15px;
+		margin-bottom: 15px;
 	}
 </style>

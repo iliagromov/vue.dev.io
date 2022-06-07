@@ -1,15 +1,18 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import store from './store';
-import router from './router';
+import Vue from 'vue';
+import App from './App.vue';
 
-let app = createApp(App);
-app.use(store);
-app.use(router);
+import store from './store';
+import router from './router/index';
 
 store.dispatch('cart/load');
-store.dispatch('products/load').then( () => {
-    app.mount('#app');
+store.dispatch('products/load').then(() => {
+	new Vue({
+		el: '#app',
+		store,
+		router,
+		render: h => h(App)
+	});
 });
 
-import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';

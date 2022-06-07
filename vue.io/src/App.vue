@@ -1,86 +1,105 @@
 <template>
-  <div>
-    <header>
-      <div class="container">
-        <div class="row">
-          <div class="col col-sm-9">
-            <h1>Site</h1>
-          </div>
-          <div class="col col-sm-3">
-            <div class="alert alert-default">
-              <div>In Cart: {{ cartCnt }}</div>
-              <div>Total: {{ carTotal }}</div>
-            </div>
-          </div>
-        </div>
-        <hr>
-      </div>
-    </header>
-    <section>
-      <div class="container">
-        <div class="row">
-          <div class="col col-sm-3 menu">
-            <ul class="list-group">
-              <!-- <li class="list-group-item">
-                 <router-link to="/">Products</router-link> 
-                <router-link :to="{ name: 'catalog' }">Products</router-link>
-              </li> -->
-
-              <router-link
-                v-for="item in menu"
-                :key="item.route"
-                :to="{ name: item.route }"
-                v-slot="{ route, isExactActive, navigate }"
-                :custom="true"
-              >
-                <li class="list-group-item" :class="isExactActive && 'active'">
-                  <a :href="route.fullPath" @click="navigate">{{
-                    item.title
-                  }}</a>
-                </li>
-              </router-link>
-            </ul>
-          </div>
-          <div class="col col-sm-9">
-            <router-view></router-view>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+	<div id="app" class="grid-box">
+		<header class="mt-3">
+			<div class="container">
+				<div class="row justify-content-between">
+					<div class="col flex-norm">
+						<div class="h3">Sample site</div>
+						<div class="">About some and other products</div>
+					</div>
+					<div class="col flex-norm">
+						<div>In Cart: {{ cartCount }}</div>
+						<div>Total: {{ cartTotal }}</div>
+					</div>
+					{{ alerts }}
+				</div>
+				<hr>
+				<nav class="navbar navbar-expand p-0">
+					<ul class="navbar-nav">
+						<router-link v-for="item in menuItems" 
+											:to="{name: item.route}"
+											:key="item.route"
+											tag="li"
+											class="nav-item"
+											active-class="active"
+											:exact="item.exact"
+						>
+							<a class="nav-link">{{item.title}}</a>
+						</router-link>
+					</ul>
+				</nav>
+				<hr>
+			</div>
+		</header>
+		<section>
+			<div class="container">
+				<transition name="slide" mode="out-in">
+					<router-view></router-view>
+				</transition>
+			</div>
+		</section>
+		<footer class="mb-3">
+			<div class="container">
+				<hr>
+				<div>&copy; Rights not found</div>
+			</div>
+		</footer>
+	</div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+	import { mapGetters } from 'vuex';
 
-export default {
-  data: () => ({
-    menu: [
-      { route: "catalog", title: "Products" },
-      { route: "cart", title: "Cart" },
-      { route: "checkout", title: "Checkout" },
-    ],
-  }),
-  computed: {
-    ...mapGetters('cart', { cartCnt: 'length', carTotal: 'total'})
-  }
-};
+	export default {
+		data(){
+			return {
+				menuItems: [
+					{ route: 'products', title: 'Products', exact: true },
+					{ route: 'cart', title: 'Cart', exact: true },
+					{ route: 'checkout', title: 'Checkout', exact: true },
+					{ route: 'office', title: 'Office', exact: false }
+				]
+			}
+		},
+		computed: {
+			...mapGetters('alerts', {alerts: 'all'}),
+			...mapGetters('cart', {cartCount: 'totalCnt', cartTotal: 'totalSum'})
+		}
+	}
 </script>
 
 <style>
-.menu {
-  border-right: 1px solid #ddd;
-}
+	.grid-box{
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+		min-height: 100vh;
+	}
 
-.list-group-item {
-  transition: background 0.3s, color 0.3s;
-}
+	.flex-norm{
+		flex: 0 1 auto !important;
+		width: auto !important;
+	}
 
-.list-group-item a {
-  text-decoration: none;
-}
+	.active a{
+		color: red;
+	}
 
-.list-group-item.active a {
-  color: inherit;
-}
+	.slide-enter-active{
+		animation: slideIn 0.3s;
+	}
+
+	.slide-leave-active{
+		animation: slideOut 0.3s;
+	}
+
+	@keyframes slideIn{
+		from{transform: rotateY(90deg);}
+		to{transform: rotateY(0deg);}
+	}
+
+	@keyframes slideOut{
+		from{transform: rotateY(0deg);}
+		to{transform: rotateY(90deg);}
+	}
+
 </style>
