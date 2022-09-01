@@ -1,5 +1,6 @@
 <template>
 	<div id="app" class="grid-box">
+		<app-alerts/>	
 		<header class="mt-3">
 			<div class="container">
 				<div class="row justify-content-between">
@@ -49,8 +50,12 @@
 
 <script>
 	import { mapGetters } from 'vuex';
-
+	import { AppAlerts } from '@/components/Alerts';
 	export default {
+		components: {
+			AppAlerts,
+		},
+
 		data(){
 			return {
 				menuItems: [
@@ -62,7 +67,7 @@
 			}
 		},
 		computed: {
-			...mapGetters('alerts', {alerts: 'all'}),
+			// ...mapGetters('alerts', {alerts: 'all'}),
 			...mapGetters('cart', {cartCount: 'totalCnt', cartTotal: 'totalSum'})
 		}
 	}

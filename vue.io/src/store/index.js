@@ -8,7 +8,7 @@ import products from './products';
 import alerts from './alerts';
 import user from './user';
 
-import { addErrorHandler } from '@/api/http';
+import { addResponseHandler } from '@/api/http';
 
 const store = new Vuex.Store({
 	modules: {
@@ -20,15 +20,41 @@ const store = new Vuex.Store({
 	strict: process.env.NODE_ENV !== 'production'
 });
 
-addErrorHandler(response => {
-	let text = 'Ошибка ответа от сервера';
+addResponseHandler(response => {
+	response => {
+		if('errorSuppression' in response.config && response.status === 200 ){
+			response.data =  { ok: true, data: response.data }
+		}
+		return response;
+	},
+	error => {
+		if(!('errorSuppression' in error.config)){
+			return Promise.reject(error);
+		}
 
-	if('vueAlert' in response.config){
-		text += ` ${response.config.vueAlert}`;
+		let es = error.config.errorSuppression;
+		let alert = { text:`Ошибка ответа от сервера${error.config.errorSuppression.text} `};
+		
+
+		if('critical' in  es){
+			alert.text += `Рекомендуем перезагрузить страницу`;
+		}
+		else{
+			alert.timeout = 3000;
+
+		}
+		
+		store.dispatch('alerts/add', alert);
+		return { data: { ok: false }};
 	}
+	// let text = 'Ошибка ответа от сервера';
 
-	store.dispatch('alerts/add', { type: 'error', text });
-	return { res: false };
+	// if('vueAlert' in response.config){
+	// 	text += ` ${response.config.vueAlert}`;
+	// }
+
+	// store.dispatch('alerts/add', { timeout:3000, text });
+	// return { res: false };
 });
 
 export default store;

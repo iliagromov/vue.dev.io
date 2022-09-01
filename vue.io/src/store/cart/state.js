@@ -1,5 +1,6 @@
 export default {
 	products: [],
 	proccessId: [],
-	token: null
+	token: null,
+	loaded: false
 }

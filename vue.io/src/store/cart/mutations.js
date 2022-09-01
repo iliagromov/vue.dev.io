@@ -2,6 +2,7 @@ export default {
 	set(state, { cart, token }){
 		state.products = cart;
 		state.token = token;
+		state.loaded = true;
 	},
 	add(state, { id }){
 		state.products.push({ id, cnt: 1 });

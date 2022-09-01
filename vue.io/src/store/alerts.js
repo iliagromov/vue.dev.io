@@ -1,3 +1,6 @@
+
+let messageAI = 0; 
+
 export default {
 	namespaced: true,
 	state: {
@@ -9,12 +12,22 @@ export default {
 	mutations: {
 		add(state, message){
 			state.messages.push(message);
+		},
+		remove(state, id){
+			state.messages = state.message.filter(msg => msg.id !== id);
 		}
 	},
 	actions: {
-		add({ commit }, { type, text }){
+		add({ commit }, { text, timeout }){
 			// id, autoremove after n sec
-			commit('add', { type, text });
+			let id = ++messageAI;
+			commit('add', { id, text });
+
+			if(timeout !== undefined){ // undefined?? 
+				setTimeout(()=>{
+					commit('remove', id)
+				},timeout)
+			}
 		}
 	}
 }

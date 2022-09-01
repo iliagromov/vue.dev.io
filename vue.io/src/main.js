@@ -12,6 +12,8 @@ store.dispatch('products/load').then(() => {
 		router,
 		render: h => h(App)
 	});
+}).catch(err => {
+	document.body.innerHTML = 'Critical error';
 });
 
 import 'bootstrap/dist/css/bootstrap.css';
