@@ -8,6 +8,7 @@ import products from './products';
 import alerts from './alerts';
 import user from './user';
 
+import router from '@/router';
 import { addResponseHandler } from '@/api/http';
 
 const store = new Vuex.Store({
@@ -20,41 +21,48 @@ const store = new Vuex.Store({
 	strict: process.env.NODE_ENV !== 'production'
 });
 
-addResponseHandler(response => {
+addResponseHandler(
 	response => {
-		if('errorSuppression' in response.config && response.status === 200 ){
-			response.data =  { ok: true, data: response.data }
+		if('errorSuppression' in response.config && response.status === 200){
+			response.data = { ok: true, data: response.data };
 		}
+
 		return response;
 	},
 	error => {
+		if(error.response.status === 401 && error.config.silence401 !== true){
+			//await 
+			store.dispatch('user/cleanUser');
+			router.push({ name: 'login' }, function(){
+				// document.location.reload(); // опционально, либо чистим склад
+			});
+		}
+
 		if(!('errorSuppression' in error.config)){
 			return Promise.reject(error);
 		}
 
 		let es = error.config.errorSuppression;
-		let alert = { text:`Ошибка ответа от сервера${error.config.errorSuppression.text} `};
-		
 
-		if('critical' in  es){
-			alert.text += `Рекомендуем перезагрузить страницу`;
+		if('exclude' in es && es.exclude.includes(error.response.status)){
+			return Promise.reject(error);
 		}
-		else{
-			alert.timeout = 3000;
 
+		if('text' in es){
+			let alert = { text: `Ошибка ответа от сервера ${es.text}` };
+
+			if('critical' in es){
+				alert.text += ' Рекомендуем перезагрузить страницу!';
+			}
+			else{
+				alert.timeout = 3000;
+			}
+	
+			store.dispatch('alerts/add', alert);
 		}
 		
-		store.dispatch('alerts/add', alert);
-		return { data: { ok: false }};
+		return { data: { ok: false } };
 	}
-	// let text = 'Ошибка ответа от сервера';
-
-	// if('vueAlert' in response.config){
-	// 	text += ` ${response.config.vueAlert}`;
-	// }
-
-	// store.dispatch('alerts/add', { timeout:3000, text });
-	// return { res: false };
-});
+);
 
 export default store;

@@ -1,6 +1,6 @@
 <template>
 	<div id="app" class="grid-box">
-		<app-alerts/>	
+		<app-alerts></app-alerts>
 		<header class="mt-3">
 			<div class="container">
 				<div class="row justify-content-between">
@@ -12,7 +12,6 @@
 						<div>In Cart: {{ cartCount }}</div>
 						<div>Total: {{ cartTotal }}</div>
 					</div>
-					{{ alerts }}
 				</div>
 				<hr>
 				<nav class="navbar navbar-expand p-0">
@@ -50,25 +49,29 @@
 
 <script>
 	import { mapGetters } from 'vuex';
-	import { AppAlerts } from '@/components/Alerts';
+	import AppAlerts from '@/components/Alerts';
+
 	export default {
 		components: {
-			AppAlerts,
-		},
-
-		data(){
-			return {
-				menuItems: [
-					{ route: 'products', title: 'Products', exact: true },
-					{ route: 'cart', title: 'Cart', exact: true },
-					{ route: 'checkout', title: 'Checkout', exact: true },
-					{ route: 'office', title: 'Office', exact: false }
-				]
-			}
+			AppAlerts
 		},
 		computed: {
-			// ...mapGetters('alerts', {alerts: 'all'}),
-			...mapGetters('cart', {cartCount: 'totalCnt', cartTotal: 'totalSum'})
+			...mapGetters('cart', {cartCount: 'totalCnt', cartTotal: 'totalSum'}),
+			...mapGetters('user', ['isLogin']),
+			menuItems(){
+				let menu = [
+					{ route: 'products', title: 'Products', exact: true },
+					{ route: 'cart', title: 'Cart', exact: true },
+					{ route: 'checkout', title: 'Checkout', exact: true }
+				]
+				menu.push(
+					this.isLogin ? 
+					{ route: 'office', title: 'Office', exact: false } :
+					{ route: 'login', title: 'Login', exact: false }
+				);
+
+				return menu;	
+			}
 		}
 	}
 </script>

@@ -16,9 +16,9 @@ export default {
 		}, 0);
 	},
 	totalCnt: state => state.products.length,
-	inProccess: state => id =>  !state.loaded || state.proccessId.includes(id),
+	inProccess: state => id => !state.loaded || state.proccessId.includes(id),
 	canAdd: (state, getters) => id => state.loaded && !getters.inCart(id) && !getters.inProccess(id),
-	canUpdate: (state, getters) => id =>  state.loaded && getters.inCart(id) && !getters.inProccess(id),
+	canUpdate: (state, getters) => id => state.loaded && getters.inCart(id) && !getters.inProccess(id),
 	inCart: (state, getters) => id => getters.index(id) !== -1,
 	index: state => id => state.products.findIndex(pr => pr.id === id),
 	item: (state, getters) => id => {

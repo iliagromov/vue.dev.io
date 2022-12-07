@@ -4,32 +4,25 @@ export default {
 	async load({ commit }){
 		let savedToken = localStorage.getItem('cartToken');
 		let { ok, data } = await cartApi.load(savedToken);
-		// let { token, needUpdate, cart } = await cartApi.load(savedToken);
-		
-		if(ok ){
-			let { token, needUpdate, cart } = data;
 
+		if(ok){
+			let { token, needUpdate, cart } = data;
+		
 			if(needUpdate){
 				localStorage.setItem('cartToken', token);
 			}
 				
 			commit('set', { cart, token });
 		}
-		
 	},
 	async add({ state, getters, commit, dispatch }, { id }){
 		if(getters.canAdd(id)){
-			//try{
-				commit('startProccess', id);
-				let {ok, data} = await cartApi.add(state.token, id)
-						
-				if(ok && data){
-					commit('add', { id });		
-				}	
-			//}
-			/* catch(e){
-				dispatch('alerts/add', { type: 'error', text: 'Не уд д т в к' }, { root: true });
-			} */
+			commit('startProccess', id);
+			let { ok, data } = await cartApi.add(state.token, id)
+					
+			if(ok && data){
+				commit('add', { id });		
+			}	
 
 			commit('endProccess', id);
 		}
@@ -37,7 +30,7 @@ export default {
 	async remove({ state, getters, commit }, { id }){
 		if(getters.canUpdate(id)){
 			commit('startProccess', id);
-			let {ok, data} = await cartApi.remove(state.token, id)
+			let { ok, data } = await cartApi.remove(state.token, id)
 
 			if(ok && data){
 				commit('remove', { ind: getters.index(id) });
@@ -50,9 +43,8 @@ export default {
 		if(getters.canUpdate(id)){
 			commit('startProccess', id);
 			let validCnt = Math.max(1, cnt);
-			// let  response =  await cartApi.change(state.token, id, validCnt)
-			let {ok, data} =  await cartApi.change(state.token, id, validCnt)
-			
+			let { ok, data } = await cartApi.change(state.token, id, validCnt)
+		
 			if(ok && data){
 				commit('setCnt', { ind: getters.index(id), cnt: validCnt });
 			}

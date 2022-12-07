@@ -2,17 +2,21 @@ import Vue from 'vue';
 import App from './App.vue';
 
 import store from './store';
-import router from './router/index';
+import router from './router';
 
 store.dispatch('cart/load');
-store.dispatch('products/load').then(() => {
+store.dispatch('user/autoLogin');
+store.dispatch('products/load')
+.then(() => {
 	new Vue({
 		el: '#app',
 		store,
 		router,
 		render: h => h(App)
 	});
-}).catch(err => {
+})
+.catch(err => {
+	console.log(err.response)
 	document.body.innerHTML = 'Critical error';
 });
 

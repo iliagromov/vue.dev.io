@@ -1,5 +1,5 @@
 const proxy = {
-	'/randomapi2': {
+	'/vue-advanced-api-l3': {
 		target: 'http://faceprog.ru',
 		secure: false,
 		changeOrigin: true

@@ -1,5 +1,4 @@
-
-let messageAI = 0; 
+let messagesAI = 0;
 
 export default {
 	namespaced: true,
@@ -14,19 +13,18 @@ export default {
 			state.messages.push(message);
 		},
 		remove(state, id){
-			state.messages = state.message.filter(msg => msg.id !== id);
+			state.messages = state.messages.filter(msg => msg.id !== id);
 		}
 	},
 	actions: {
 		add({ commit }, { text, timeout }){
-			// id, autoremove after n sec
-			let id = ++messageAI;
+			let id = ++messagesAI;
 			commit('add', { id, text });
 
-			if(timeout !== undefined){ // undefined?? 
-				setTimeout(()=>{
-					commit('remove', id)
-				},timeout)
+			if(timeout !== undefined){
+				setTimeout(() => {
+					commit('remove', id);
+				}, timeout);
 			}
 		}
 	}

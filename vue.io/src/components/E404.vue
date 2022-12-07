@@ -1,18 +1,7 @@
 <template>
 	<div>
-		<h1>{{ title }}</h1>
+		<h1>Page not found</h1>
 		<hr>
-		Start from <router-link :to="{name: 'catalog'}">main page</router-link> 
+		Start from <router-link :to="{name: 'products'}">main page</router-link>
 	</div>
 </template>
-
-<script>
-	export default {
-		props: {
-			title: {
-				type: String,
-				default: "Page not found"
-			}
-		}
-	}
-</script>

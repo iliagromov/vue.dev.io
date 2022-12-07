@@ -1,19 +1,18 @@
 <template>
 	<div class="box">
-		<transition-group name="item">
+		<transition-group name="item" tag="div">
 			<div class="item" v-for="alert in alerts" :key="alert.id">
 				{{ alert.text }}
 			</div>
 		</transition-group>
 	</div>
 </template>
-
 <script>
-	import { mapGetters } from 'vuex';
+	import { mapGetters } from 'vuex'; 
 
 	export default {
 		computed: {
-			...mapGetters('alerts', { alerts: 'all'})
+			...mapGetters('alerts', { alerts: 'all' })
 		}
 	}
 </script>
